@@ -1,0 +1,200 @@
+<div class="row">
+  <div class="col">
+    <h3 *ngIf="viewstate == 'details'">Details</h3>
+    <h3 *ngIf="viewstate == 'edit'">Editieren</h3>
+    <h3 *ngIf="viewstate == 'new'">Neue anlegen</h3>
+  </div>
+  <div class="col">
+    <a
+      *ngIf="viewstate != 'new'"
+      routerLink="/autos/0"
+      [queryParams]="{ viewstate: 'new' }"
+      (click)="selectAction('new')"
+      >Neuen&nbsp;Datensatz&nbsp;anlegen</a
+    >
+  </div>
+</div>
+
+<p *ngIf="!auto"><em>Loading...</em></p>
+
+<div id="autodetails" *ngIf="viewstate == 'details'">
+  <table *ngIf="auto" class="table table-striped" id="autoliste">
+    <tbody>
+      <tr>
+        <th>ID</th>
+        <td>{{ auto.ID }}</td>
+      </tr>
+      <tr>
+        <th>Marke</th>
+        <td>{{ auto.Marke }}</td>
+      </tr>
+      <tr>
+        <th>Modell</th>
+        <td [innerHTML]="auto.Modell"></td>
+      </tr>
+      <tr>
+        <th>Fahrgestellnummer</th>
+        <td>{{ auto.Fahrgestellnummer }}</td>
+      </tr>
+      <tr>
+        <th>Kunde</th>
+        <td>{{ auto.Kunde }}</td>
+      </tr>
+      <tr>
+        <th>H&auml;ndler</th>
+        <td>{{ auto.Haendler }}</td>
+      </tr>
+      <tr>
+        <th>Erstzulassung</th>
+        <td>{{ auto.Erstzulassung }}</td>
+      </tr>
+      <tr>
+        <th>ErstKennzeichen</th>
+        <td>{{ auto.ErstKennzeichen }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="row" style="max-width:700px">
+    <div class="col">
+      <button type="button" class="btn btn-primary" routerLink="/autos">
+        Zurück zur Übersicht
+      </button>
+    </div>
+    <div class="col">
+      <a
+        routerLink="/autos/{{ auto.ID }}"
+        [queryParams]="{ viewstate: 'edit' }"
+        (click)="selectAction('edit')"
+        >Zum Editieren</a
+      >
+    </div>
+  </div>
+</div>
+
+<div id="autoeditieren" *ngIf="editmodus">
+  <table *ngIf="auto" class="table table-striped" id="autoliste">
+    <tbody>
+      <tr>
+        <th class="editlabel">ID</th>
+        <td>{{ auto.ID }}</td>
+      </tr>
+      <tr>
+        <th>Marke</th>
+        <td>
+          <input type="text" class="form-control" [(ngModel)]="auto.Marke" />
+        </td>
+      </tr>
+      <tr>
+        <th>Modell</th>
+        <td>
+          <input type="text" class="form-control" [(ngModel)]="auto.Modell" />
+        </td>
+      </tr>
+      <tr>
+        <th>Fahrgestellnummer</th>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="auto.Fahrgestellnummer"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th>KundenID</th>
+        <td>
+          <select
+            name="kunde"
+            type="text"
+            class="form-select"
+            [(ngModel)]="auto.KundenID"
+          >
+            <option value="">Bitte wählen</option>
+            <option
+              *ngFor="let h of kunden; let i = index"
+              [value]="kunden[i].ID"
+            >
+              {{ RR(kunden[i].Vorname) + ' ' + RR(kunden[i].Nachname) }}
+            </option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>Haendler</th>
+        <td>
+          <select
+            name="haendler"
+            type="text"
+            class="form-select"
+            [(ngModel)]="auto.HaendlerID"
+          >
+            <option value="">Bitte wählen</option>
+            <option
+              *ngFor="let h of haendler; let i = index"
+              [value]="haendler[i].ID"
+            >
+              {{ haendler[i].Firmenname }}
+            </option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>Erstzulassung</th>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="auto.Erstzulassung"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th>ErstKennzeichen</th>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="auto.ErstKennzeichen"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="row" style="max-width:700px">
+    <div class="col">
+      <button type="button" class="btn btn-primary" routerLink="/autos">
+        Zurück zur Übersicht
+      </button>
+    </div>
+
+    <div class="col">
+      <button
+        type="button"
+        class="btn btn-success"
+        routerLink="/autos/{{ auto.ID }}"
+        [queryParams]="{ viewstate: 'details' }"
+        (click)="selectAction('save')"
+      >
+        Speichern
+      </button>
+    </div>
+    <div class="col">
+      <a
+        *ngIf="viewstate != 'new'"
+        routerLink="/autos/{{ auto.ID }}"
+        [queryParams]="{ viewstate: 'details' }"
+        (click)="selectAction('details')"
+        >Zur Detailansicht</a
+      >
+    </div>
+  </div>
+</div>
+
+<div *ngIf="message" class="alert alert-success mt-3 mb-3" role="alert">
+  {{ message }}
+</div>
+<div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-3" role="alert">
+  {{ errorMessage }}
+</div>
